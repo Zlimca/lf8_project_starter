@@ -1,13 +1,22 @@
 package de.szut.lf8_project.mapping;
 
-import com.sun.xml.bind.v2.TODO;
-import de.szut.lf8_project.customer.CustomerEntity;
+import de.szut.lf8_project.employee.AddEmployeeDto;
+import de.szut.lf8_project.employee.EmployeeEntity;
 import de.szut.lf8_project.project.AddProjectDto;
 import de.szut.lf8_project.project.ProjectEntity;
 import org.springframework.stereotype.Service;
 
 @Service
 public class MappingService {
+    public EmployeeEntity mapAddEmployeeDtoToEmployee(AddEmployeeDto dto) {
+        EmployeeEntity newEmployee = new EmployeeEntity();
+        newEmployee.setFirstname(dto.getFirstname());
+        newEmployee.setLastname(dto.getLastname());
+        newEmployee.setStreet(dto.getStreet());
+        newEmployee.setPostcode(dto.getPostcode());
+        newEmployee.setCity(dto.getCity());
+        return newEmployee;
+    }
 
     public ProjectEntity mapAddProjectDtoToProject(AddProjectDto dto){
         ProjectEntity newProject = new ProjectEntity();
