@@ -1,5 +1,6 @@
 package de.szut.lf8_project.project;
 
+import de.szut.lf8_project.customer.CustomerEntity;
 import de.szut.lf8_project.employee.EmployeeEntity;
 import lombok.Data;
 
@@ -31,6 +32,9 @@ public class ProjectEntity {
     @JoinTable(name = "project_employee", joinColumns = { @JoinColumn(name = "project_id") },
     inverseJoinColumns = { @JoinColumn(name = "employee_id")})
     private Set<EmployeeEntity> employees = new HashSet <>();
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private CustomerEntity customer;
 
     public void addEmployee(EmployeeEntity employee) {
         this.employees.add(employee);
