@@ -37,4 +37,8 @@ public class EmployeeService {
         updatedEmployee = this.repository.save(updatedEmployee);
         return updatedEmployee;
     }
+
+    public void delete(long id) {
+        repository.deleteById(id);
+    }
 }
