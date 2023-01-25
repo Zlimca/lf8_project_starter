@@ -29,9 +29,10 @@ public class ProjectEntity {
                     CascadeType.PERSIST,
                     CascadeType.MERGE
             })
-    @JoinTable(name = "project_employee", joinColumns = { @JoinColumn(name = "project_id") },
-    inverseJoinColumns = { @JoinColumn(name = "employee_id")})
-    private Set<EmployeeEntity> employees = new HashSet <>();
+    @JoinTable(name = "project_employee",
+            joinColumns = @JoinColumn(name = "project_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "employee_id", referencedColumnName = "id"))
+    private Set<EmployeeEntity> employees = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private CustomerEntity customer;

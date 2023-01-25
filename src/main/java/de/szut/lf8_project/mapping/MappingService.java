@@ -21,6 +21,7 @@ public class MappingService {
         newEmployee.setStreet(dto.getStreet());
         newEmployee.setPostcode(dto.getPostcode());
         newEmployee.setCity(dto.getCity());
+        newEmployee.setPhone(dto.getPhone());
         return newEmployee;
     }
 
@@ -32,6 +33,7 @@ public class MappingService {
         dto.setStreet(employee.getStreet());
         dto.setPostcode(employee.getPostcode());
         dto.setCity(employee.getCity());
+        dto.setPhone(employee.getPhone());
         dto.setProjects(employee.getProjects());
         return dto;
     }
@@ -43,6 +45,7 @@ public class MappingService {
         customerEntity.setStreet(dto.getStreet());
         customerEntity.setPostcode(dto.getPostcode());
         customerEntity.setCity(dto.getCity());
+        customerEntity.setPhone(dto.getPhone());
         return customerEntity;
     }
 
@@ -54,6 +57,7 @@ public class MappingService {
         dto.setStreet(customer.getStreet());
         dto.setPostcode(customer.getPostcode());
         dto.setCity(customer.getCity());
+        dto.setPhone(customer.getPhone());
         dto.setProjects(customer.getProjects());
         return dto;
     }
