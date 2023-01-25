@@ -1,5 +1,8 @@
 package de.szut.lf8_project.mapping;
 
+import de.szut.lf8_project.customer.CustomerEntity;
+import de.szut.lf8_project.customer.dto.AddCustomerDto;
+import de.szut.lf8_project.customer.dto.GetCustomerDto;
 import de.szut.lf8_project.employee.dto.AddEmployeeDto;
 import de.szut.lf8_project.employee.EmployeeEntity;
 import de.szut.lf8_project.employee.dto.GetEmployeeDto;
@@ -31,13 +34,35 @@ public class MappingService {
         return dto;
     }
 
-    public ProjectEntity mapAddProjectDtoToProject(AddProjectDto dto){
+    public CustomerEntity mapAddCustomerDtoToCustomer(AddCustomerDto dto) {
+        CustomerEntity customerEntity = new CustomerEntity();
+        customerEntity.setFirstname(dto.getFirstname());
+        customerEntity.setLastname(dto.getLastname());
+        customerEntity.setStreet(dto.getStreet());
+        customerEntity.setPostcode(dto.getPostcode());
+        customerEntity.setCity(dto.getCity());
+        return customerEntity;
+    }
+
+    public GetCustomerDto mapCustomerToGetCustomerDto(CustomerEntity customer) {
+        GetCustomerDto dto = new GetCustomerDto();
+        dto.setId(customer.getId());
+        dto.setFirstname(customer.getFirstname());
+        dto.setLastname(customer.getLastname());
+        dto.setStreet(customer.getStreet());
+        dto.setPostcode(customer.getPostcode());
+        dto.setCity(customer.getCity());
+        dto.setProjects(customer.getProjects());
+        return dto;
+    }
+
+    public ProjectEntity mapAddProjectDtoToProject(AddProjectDto dto) {
         ProjectEntity newProject = new ProjectEntity();
         newProject.setDescription(dto.getDescription());
         newProject.setComment(dto.getComment());
         newProject.setStartDate(dto.getStartDate());
         newProject.setPlannedEndDate(dto.getPlannedEndDate());
-        //tOdO Customer Information hinzufügen
+        newProject.setCustomer(dto.getCustomer());
         return newProject;
     }
 }

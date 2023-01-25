@@ -13,4 +13,5 @@ public class GetProjectDto {
     private LocalDateTime plannedEndDate;
     private LocalDateTime actualEndDate;
     private Long cid;
+    private Long[] eIds;
 }
