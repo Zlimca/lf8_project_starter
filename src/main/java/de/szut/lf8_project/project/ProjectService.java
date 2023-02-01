@@ -20,13 +20,8 @@ public class ProjectService {
        return listProject;
     }
 
-    /*public ProjectEntity readById(long id){
+    public ProjectEntity readById(long id){
         Optional<ProjectEntity> oProject = repository.findById(id);
-        if (oProject.isEmpty()){
-            throw new ResourceNotFoundException("Project ot found on id: " + id);
-        }
-        return oProject.get();
-    }*/
-
-
+        return oProject.orElse(null);
+    }
 }
