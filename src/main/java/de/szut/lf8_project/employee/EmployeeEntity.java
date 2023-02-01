@@ -9,7 +9,7 @@ import java.util.Set;
 
 @Data
 @Entity
-@Table(name = "employees")
+@Table(name = "employee")
 public class EmployeeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,17 +20,16 @@ public class EmployeeEntity {
     private String postcode;
     private String city;
     private String phone;
-    //private Set<String> skillSet; //TODO: Add Skill Set Entity and Many to Many relation
     @ManyToMany(fetch = FetchType.LAZY,
             cascade = {
                     CascadeType.PERSIST,
                     CascadeType.MERGE
             },
-            mappedBy = "employees")
-    private Set<ProjectEntity> projects = new HashSet<ProjectEntity>();
+            mappedBy = "employee")
+    private Set<ProjectEntity> projects = new HashSet<>();
 
     public Set<ProjectEntity> getProjects() {
-        return projects;
+        return this.projects;
     }
 
     public void setProjects(Set<ProjectEntity> projects) {
