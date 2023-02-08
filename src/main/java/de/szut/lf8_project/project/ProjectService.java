@@ -1,5 +1,6 @@
 package de.szut.lf8_project.project;
 
+import de.szut.lf8_project.employee.EmployeeEntity;
 import de.szut.lf8_project.exceptionHandling.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -20,13 +21,26 @@ public class ProjectService {
        return listProject;
     }
 
-    /*public ProjectEntity readById(long id){
+    public ProjectEntity readById(long id){
         Optional<ProjectEntity> oProject = repository.findById(id);
         if (oProject.isEmpty()){
-            throw new ResourceNotFoundException("Project ot found on id: " + id);
+            throw new ResourceNotFoundException("Project not found no id: " + id);
         }
         return oProject.get();
-    }*/
+    }
+
+    public ProjectEntity update(ProjectEntity project) {
+        ProjectEntity updatedProject = readById(project.getId());
+        updatedProject.setDescription(project.getDescription());
+        updatedProject.setComment(project.getComment());
+        updatedProject.setStartDate(project.getStartDate());
+        updatedProject.setPlannedEndDate(project.getPlannedEndDate());
+        updatedProject.setActualEndDate(project.getActualEndDate());
+        updatedProject.setCustomer(project.getCustomer());
+        updatedProject.setEmployees(project.getEmployees());
+        updatedProject = this.repository.save(updatedProject);
+        return updatedProject;
+    }
 
 
 }

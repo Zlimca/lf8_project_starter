@@ -29,5 +29,13 @@ public class ProjectController {
         final GetProjectDto request = this.mappingService.mapProjectToGetProjectDto(newProject);
         return new ResponseEntity<>(request, HttpStatus.CREATED);
     }
+    @PutMapping("/{id}")
+    public ResponseEntity<GetProjectDto> updateProject(@PathVariable final Long id, @Valid @RequestBody final AddProjectDto dto) {
+        ProjectEntity updatedProject = this.mappingService.mapAddProjectDtoToProject(dto);
+        updatedProject.setId(id);
+        updatedProject = this.service.update(updatedProject);
+        GetProjectDto request = this.mappingService.mapProjectToGetProjectDto(updatedProject);
+        return new ResponseEntity<>(request, HttpStatus.OK);
+    }
 }
 
