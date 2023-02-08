@@ -57,5 +57,18 @@ public class ProjectController {
         final GetProjectDto request = this.mappingService.mapProjectToGetProjectDto(newProject);
         return new ResponseEntity<>(request, HttpStatus.CREATED);
     }
+    @PutMapping("/{id}")
+    public ResponseEntity<GetProjectDto> updateProject(@PathVariable final Long id, @Valid @RequestBody final AddProjectDto dto) {
+        final CustomerEntity customer = this.customerService.readById(dto.getCustomerId());
+        Set<EmployeeEntity> employees = new HashSet<>();
+        dto.getEmployeeIds().forEach(eid -> employees.add(
+                this.employeeService.readById(eid)
+        ));
+        ProjectEntity updatedProject = this.mappingService.mapAddProjectDtoToProject(dto, customer, employees);
+        updatedProject.setId(id);
+        updatedProject = this.projectService.update(updatedProject);
+        GetProjectDto request = this.mappingService.mapProjectToGetProjectDto(updatedProject);
+        return new ResponseEntity<>(request, HttpStatus.OK);
+    }
 }
 
