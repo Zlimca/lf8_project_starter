@@ -3,7 +3,6 @@ package de.szut.lf8_project.mapping;
 import de.szut.lf8_project.customer.CustomerEntity;
 import de.szut.lf8_project.customer.dto.AddCustomerDto;
 import de.szut.lf8_project.customer.dto.GetCustomerDto;
-import de.szut.lf8_project.customer.CustomerEntity;
 import de.szut.lf8_project.employee.dto.AddEmployeeDto;
 import de.szut.lf8_project.employee.EmployeeEntity;
 import de.szut.lf8_project.employee.dto.GetEmployeeDto;
@@ -11,6 +10,9 @@ import de.szut.lf8_project.project.dto.AddProjectDto;
 import de.szut.lf8_project.project.dto.GetProjectDto;
 import de.szut.lf8_project.project.ProjectEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Service
 public class MappingService {
@@ -62,13 +64,14 @@ public class MappingService {
         return dto;
     }
 
-    public ProjectEntity mapAddProjectDtoToProject(AddProjectDto dto) {
+    public ProjectEntity mapAddProjectDtoToProject(AddProjectDto dto, CustomerEntity customer, Set<EmployeeEntity> employees) {
         ProjectEntity newProject = new ProjectEntity();
         newProject.setDescription(dto.getDescription());
         newProject.setComment(dto.getComment());
         newProject.setStartDate(dto.getStartDate());
         newProject.setPlannedEndDate(dto.getPlannedEndDate());
-        newProject.setCustomer(dto.getCustomer());
+        newProject.setCustomer(customer);
+        newProject.setEmployees(employees);
         return newProject;
     }
 
@@ -80,8 +83,10 @@ public class MappingService {
         dto.setStartDate(project.getStartDate());
         dto.setPlannedEndDate(project.getPlannedEndDate());
         dto.setActualEndDate(project.getActualEndDate());
-        dto.setCustomer(project.getCustomer());
-        dto.setEmployees(project.getEmployees());
+        dto.setCustomerId(project.getCustomer().getId());
+        Set<Long> employeeIds = new HashSet<>();
+        project.getEmployees().forEach(employee -> employeeIds.add(employee.getId()));
+        dto.setEmployeeIds(employeeIds);
         return dto;
     }
 }

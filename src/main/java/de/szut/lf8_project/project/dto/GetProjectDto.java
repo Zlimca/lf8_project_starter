@@ -1,7 +1,5 @@
 package de.szut.lf8_project.project.dto;
 
-import de.szut.lf8_project.customer.CustomerEntity;
-import de.szut.lf8_project.employee.EmployeeEntity;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -15,6 +13,6 @@ public class GetProjectDto {
     private LocalDateTime startDate;
     private LocalDateTime plannedEndDate;
     private LocalDateTime actualEndDate;
-    private CustomerEntity customer;
-    private Set<EmployeeEntity> employees;
+    private Set<Long> employeeIds;
+    private Long customerId;
 }
