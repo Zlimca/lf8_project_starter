@@ -23,6 +23,8 @@ public class ProjectService {
 
     public ProjectEntity readById(long id){
         Optional<ProjectEntity> oProject = repository.findById(id);
+        return oProject.orElse(null);
+    }
         if (oProject.isEmpty()){
             throw new ResourceNotFoundException("Project not found no id: " + id);
         }
@@ -41,6 +43,4 @@ public class ProjectService {
         updatedProject = this.repository.save(updatedProject);
         return updatedProject;
     }
-
-
 }
