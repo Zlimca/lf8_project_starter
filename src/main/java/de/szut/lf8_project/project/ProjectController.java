@@ -1,7 +1,10 @@
 package de.szut.lf8_project.project;
 
 
-import de.szut.lf8_project.employee.dto.AddEmployeeDto;
+import de.szut.lf8_project.customer.CustomerEntity;
+import de.szut.lf8_project.customer.CustomerService;
+import de.szut.lf8_project.employee.EmployeeEntity;
+import de.szut.lf8_project.employee.EmployeeService;
 import de.szut.lf8_project.project.dto.AddProjectDto;
 import de.szut.lf8_project.project.dto.GetProjectDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -57,7 +60,7 @@ public class ProjectController {
 
     @GetMapping("/{id}")
     public ResponseEntity<GetProjectDto> getProjectById(@PathVariable final Long id) {
-        final var entity = this.service.readById(id);
+        final var entity = this.projectService.readById(id);
         final GetProjectDto dto = this.mappingService.mapProjectToGetProjectDto(entity);
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }

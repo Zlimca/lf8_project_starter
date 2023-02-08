@@ -2,14 +2,18 @@ package de.szut.lf8_project.project;
 
 import de.szut.lf8_project.customer.CustomerEntity;
 import de.szut.lf8_project.employee.EmployeeEntity;
-import lombok.Data;
+import lombok.*;
+import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 @Entity
 @Table(name = "projects")
 @SequenceGenerator(name = "project_generator", sequenceName = "project_seq")
@@ -17,7 +21,7 @@ public class ProjectEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
+    private Long id;
 
     private String description;
     private String comment;
@@ -32,9 +36,10 @@ public class ProjectEntity {
     @JoinTable(name = "project_employee",
             joinColumns = @JoinColumn(name = "project_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "employee_id", referencedColumnName = "id"))
-    private Set<EmployeeEntity> employees = new HashSet<>();
+    @ToString.Exclude
+    private Set<EmployeeEntity> employees;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private CustomerEntity customer;
 
     public void addEmployee(EmployeeEntity employee) {
@@ -48,5 +53,18 @@ public class ProjectEntity {
             this.employees.remove(employee);
             employee.getProjects().remove(this);
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        ProjectEntity that = (ProjectEntity) o;
+        return id != null && Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 }

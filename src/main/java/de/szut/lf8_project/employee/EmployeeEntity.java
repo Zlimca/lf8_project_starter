@@ -1,13 +1,17 @@
 package de.szut.lf8_project.employee;
 
 import de.szut.lf8_project.project.ProjectEntity;
-import lombok.Data;
+import lombok.*;
+import org.hibernate.Hibernate;
 
 import javax.persistence.*;
-import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 @Entity
 @Table(name = "employees")
 public class EmployeeEntity {
@@ -26,7 +30,8 @@ public class EmployeeEntity {
                     CascadeType.MERGE
             },
             mappedBy = "employees")
-    private Set<ProjectEntity> projects = new HashSet<>();
+    @ToString.Exclude
+    private Set<ProjectEntity> projects;
 
     public Set<ProjectEntity> getProjects() {
         return this.projects;
@@ -34,5 +39,18 @@ public class EmployeeEntity {
 
     public void setProjects(Set<ProjectEntity> projects) {
         this.projects = projects;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        EmployeeEntity employee = (EmployeeEntity) o;
+        return id != null && Objects.equals(id, employee.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 }
