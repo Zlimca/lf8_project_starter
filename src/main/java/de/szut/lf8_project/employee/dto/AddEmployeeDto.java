@@ -24,6 +24,4 @@ public class AddEmployeeDto {
     private String city;
     @NotBlank(message = "Phone is mandatory")
     private String phone;
-    // Skill set is not mandatory
-    //private Set<String> skillSet; //TODO: implement when in entity class
 }

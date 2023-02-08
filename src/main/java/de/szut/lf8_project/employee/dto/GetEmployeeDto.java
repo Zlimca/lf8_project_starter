@@ -14,6 +14,5 @@ public class GetEmployeeDto {
     private String postcode;
     private String city;
     private String phone;
-    //private Set<Skill> skillSet; //TODO implement skill sets
     private Set<ProjectEntity> projects;
 }
