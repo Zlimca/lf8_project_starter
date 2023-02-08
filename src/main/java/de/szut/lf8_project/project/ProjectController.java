@@ -7,6 +7,11 @@ import de.szut.lf8_project.employee.EmployeeEntity;
 import de.szut.lf8_project.employee.EmployeeService;
 import de.szut.lf8_project.project.dto.AddProjectDto;
 import de.szut.lf8_project.project.dto.GetProjectDto;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import de.szut.lf8_project.mapping.MappingService;
@@ -32,8 +37,16 @@ public class ProjectController {
         this.mappingService = mappingService;
     }
 
+    @Operation(summary = "")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "created project", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = AddProjectDto.class))}),
+            @ApiResponse(responseCode = "400", description = "invalid JSON posted", content = @Content),
+            @ApiResponse(responseCode = "401", description = "not authorized", content = @Content)
+    })
     @PostMapping
     public ResponseEntity<GetProjectDto> createProject(@Valid @RequestBody final AddProjectDto dto) {
+        System.getLogger("project_dto").log(System.Logger.Level.DEBUG, dto.toString());
         final CustomerEntity customer = this.customerService.readById(dto.getCustomerId());
         Set<EmployeeEntity> employees = new HashSet<>();
         dto.getEmployeeIds().forEach(id -> employees.add(

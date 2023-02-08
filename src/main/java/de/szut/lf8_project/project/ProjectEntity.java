@@ -11,7 +11,7 @@ import java.util.Set;
 
 @Data
 @Entity
-@Table(name = "project")
+@Table(name = "projects")
 @SequenceGenerator(name = "project_generator", sequenceName = "project_seq")
 public class ProjectEntity {
 

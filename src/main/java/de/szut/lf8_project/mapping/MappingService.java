@@ -11,6 +11,7 @@ import de.szut.lf8_project.project.dto.GetProjectDto;
 import de.szut.lf8_project.project.ProjectEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Service
@@ -83,7 +84,9 @@ public class MappingService {
         dto.setPlannedEndDate(project.getPlannedEndDate());
         dto.setActualEndDate(project.getActualEndDate());
         dto.setCustomerId(project.getCustomer().getId());
-        project.getEmployees().forEach(employee -> dto.getEmployeeIds().add(employee.getId()));
+        Set<Long> employeeIds = new HashSet<>();
+        project.getEmployees().forEach(employee -> employeeIds.add(employee.getId()));
+        dto.setEmployeeIds(employeeIds);
         return dto;
     }
 }

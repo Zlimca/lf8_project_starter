@@ -9,7 +9,7 @@ import java.util.Set;
 
 @Data
 @Entity
-@Table(name = "employee")
+@Table(name = "employees")
 public class EmployeeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,7 +25,7 @@ public class EmployeeEntity {
                     CascadeType.PERSIST,
                     CascadeType.MERGE
             },
-            mappedBy = "employee")
+            mappedBy = "employees")
     private Set<ProjectEntity> projects = new HashSet<>();
 
     public Set<ProjectEntity> getProjects() {
