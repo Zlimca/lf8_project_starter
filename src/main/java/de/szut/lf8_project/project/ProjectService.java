@@ -16,6 +16,8 @@ public class ProjectService {
 
     public ProjectEntity create(ProjectEntity newProject){return repository.save(newProject);}
 
+    public void deleteById(Long id) {repository.deleteById(id);}
+
     public List<ProjectEntity> readAll(){
        return repository.findAll();
     }
@@ -48,5 +50,12 @@ public class ProjectService {
             repository.save(project);
         }
         return removed;
+    }
+
+    public void delete(Long id) {
+        if (!repository.existsById(id)) {
+            throw new ResourceNotFoundException("Project not found for id: " + id);
+        }
+        repository.deleteById(id);
     }
 }
