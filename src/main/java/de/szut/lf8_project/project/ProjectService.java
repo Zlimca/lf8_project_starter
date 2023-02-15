@@ -25,10 +25,9 @@ public class ProjectService {
         Optional<ProjectEntity> oProject = repository.findById(id);
         return oProject.orElse(null);
     }
-        if (oProject.isEmpty()){
-            throw new ResourceNotFoundException("Project not found no id: " + id);
-        }
-        return oProject.get();
+
+    public List<ProjectEntity> findByEmployeeId(Long employeeId) {
+        return repository.findByEmployeesId(employeeId);
     }
 
     public ProjectEntity update(ProjectEntity project) {
