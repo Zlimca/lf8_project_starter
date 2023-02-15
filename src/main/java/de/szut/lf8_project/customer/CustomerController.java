@@ -2,6 +2,9 @@ package de.szut.lf8_project.customer;
 
 import de.szut.lf8_project.customer.dto.AddCustomerDto;
 import de.szut.lf8_project.customer.dto.GetCustomerDto;
+import de.szut.lf8_project.employee.EmployeeEntity;
+import de.szut.lf8_project.employee.dto.AddEmployeeDto;
+import de.szut.lf8_project.employee.dto.GetEmployeeShortDto;
 import de.szut.lf8_project.mapping.MappingService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +29,7 @@ public class CustomerController {
     public ResponseEntity<GetCustomerDto> createCustomer(@Valid @RequestBody final AddCustomerDto dto) {
         CustomerEntity newCustomer = this.mappingService.mapAddCustomerDtoToCustomer(dto);
         newCustomer = this.customerService.add(newCustomer);
-        final GetCustomerDto request = this.mappingService.mapCustomerToGetCustomerDto(newCustomer);
+        final GetCustomerDto request = this.mappingService.mapCustomerToGetCustomerShortDto(newCustomer);
         return new ResponseEntity<>(request, HttpStatus.CREATED);
     }
 
@@ -52,7 +55,7 @@ public class CustomerController {
         CustomerEntity updatedCustomer = this.mappingService.mapAddCustomerDtoToCustomer(dto);
         updatedCustomer.setId(id);
         updatedCustomer = this.customerService.update(updatedCustomer);
-        GetCustomerDto request = this.mappingService.mapCustomerToGetCustomerDto(updatedCustomer);
+        GetCustomerDto request = this.mappingService.mapCustomerToGetCustomerShortDto(updatedCustomer);
         return new ResponseEntity<>(request, HttpStatus.OK);
     }
 

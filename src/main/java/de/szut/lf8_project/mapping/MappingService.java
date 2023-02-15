@@ -3,12 +3,16 @@ package de.szut.lf8_project.mapping;
 import de.szut.lf8_project.customer.CustomerEntity;
 import de.szut.lf8_project.customer.dto.AddCustomerDto;
 import de.szut.lf8_project.customer.dto.GetCustomerDto;
-import de.szut.lf8_project.employee.dto.AddEmployeeDto;
+import de.szut.lf8_project.customer.dto.GetCustomerShortDto;
 import de.szut.lf8_project.employee.EmployeeEntity;
+import de.szut.lf8_project.employee.dto.AddEmployeeDto;
 import de.szut.lf8_project.employee.dto.GetEmployeeDto;
-import de.szut.lf8_project.project.dto.AddProjectDto;
-import de.szut.lf8_project.project.dto.GetProjectDto;
+import de.szut.lf8_project.employee.dto.GetEmployeeShortDto;
 import de.szut.lf8_project.project.ProjectEntity;
+import de.szut.lf8_project.project.dto.AddProjectDto;
+import de.szut.lf8_project.project.dto.GetProjectCustomerDto;
+import de.szut.lf8_project.project.dto.GetProjectDto;
+import de.szut.lf8_project.project.dto.GetProjectEmployeeDto;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -27,6 +31,19 @@ public class MappingService {
         return newEmployee;
     }
 
+    public GetEmployeeShortDto mapEmployeeToGetEmployeeShortDto(EmployeeEntity employee) {
+        GetEmployeeShortDto dto = new GetEmployeeShortDto();
+        dto.setId(employee.getId());
+        dto.setFirstname(employee.getFirstname());
+        dto.setLastname(employee.getLastname());
+        dto.setStreet(employee.getStreet());
+        dto.setPostcode(employee.getPostcode());
+        dto.setCity(employee.getCity());
+        dto.setPhone(employee.getPhone());
+
+        return dto;
+    }
+
     public GetEmployeeDto mapEmployeeToGetEmployeeDto(EmployeeEntity employee) {
         GetEmployeeDto dto = new GetEmployeeDto();
         dto.setId(employee.getId());
@@ -36,7 +53,32 @@ public class MappingService {
         dto.setPostcode(employee.getPostcode());
         dto.setCity(employee.getCity());
         dto.setPhone(employee.getPhone());
-        dto.setProjects(employee.getProjects());
+
+        Set<GetProjectEmployeeDto> allProjects = new HashSet<>();
+        for(ProjectEntity project : employee.getProjects()){
+            GetProjectEmployeeDto pdto = new GetProjectEmployeeDto();
+            pdto.setId(project.getId());
+            pdto.setComment(project.getComment());
+            pdto.setDescription(project.getDescription());
+
+            CustomerEntity customer = project.getCustomer();
+            GetCustomerShortDto cdto = new GetCustomerShortDto();
+            cdto.setId(customer.getId());
+            cdto.setFirstname(customer.getFirstname());
+            cdto.setLastname(customer.getLastname());
+            cdto.setPostcode(customer.getPostcode());
+            cdto.setCity(customer.getCity());
+            cdto.setStreet(customer.getStreet());
+            cdto.setPhone(customer.getPhone());
+            pdto.setCustomer(cdto);
+
+            pdto.setStartDate(project.getStartDate());
+            pdto.setPlannedEndDate(project.getPlannedEndDate());
+            pdto.setActualEndDate(project.getActualEndDate());
+
+            allProjects.add(pdto);
+        }
+        dto.setProjects(allProjects);
         return dto;
     }
 
@@ -51,6 +93,19 @@ public class MappingService {
         return customerEntity;
     }
 
+    public GetCustomerDto mapCustomerToGetCustomerShortDto(CustomerEntity customer) {
+        GetCustomerDto dto = new GetCustomerDto();
+        dto.setId(customer.getId());
+        dto.setFirstname(customer.getFirstname());
+        dto.setLastname(customer.getLastname());
+        dto.setStreet(customer.getStreet());
+        dto.setPostcode(customer.getPostcode());
+        dto.setCity(customer.getCity());
+        dto.setPhone(customer.getPhone());
+
+        return dto;
+    }
+
     public GetCustomerDto mapCustomerToGetCustomerDto(CustomerEntity customer) {
         GetCustomerDto dto = new GetCustomerDto();
         dto.setId(customer.getId());
@@ -60,7 +115,32 @@ public class MappingService {
         dto.setPostcode(customer.getPostcode());
         dto.setCity(customer.getCity());
         dto.setPhone(customer.getPhone());
-        dto.setProjects(customer.getProjects());
+        Set<GetProjectCustomerDto> allProjects = new HashSet<>();
+        for (ProjectEntity project : customer.getProjects()){
+            GetProjectCustomerDto pdto = new GetProjectCustomerDto();
+            pdto.setId(project.getId());
+            pdto.setComment(project.getComment());
+            pdto.setDescription(project.getDescription());
+            pdto.setPlannedEndDate(project.getPlannedEndDate());
+            pdto.setStartDate(project.getStartDate());
+            pdto.setActualEndDate(project.getActualEndDate());
+
+            Set<GetEmployeeShortDto> allEmployees = new HashSet<>();
+            for(EmployeeEntity employee : project.getEmployees()) {
+                GetEmployeeShortDto edto = new GetEmployeeShortDto();
+                edto.setId(employee.getId());
+                edto.setFirstname(employee.getFirstname());
+                edto.setLastname(employee.getLastname());
+                edto.setCity(employee.getCity());
+                edto.setPostcode(employee.getPostcode());
+                edto.setStreet(employee.getStreet());
+                edto.setPhone(employee.getPhone());
+                allEmployees.add(edto);
+            }
+            pdto.setEmployees(allEmployees);
+            allProjects.add(pdto);
+        }
+        dto.setProjects(allProjects);
         return dto;
     }
 
@@ -83,10 +163,31 @@ public class MappingService {
         dto.setStartDate(project.getStartDate());
         dto.setPlannedEndDate(project.getPlannedEndDate());
         dto.setActualEndDate(project.getActualEndDate());
-        dto.setCustomerId(project.getCustomer().getId());
-        Set<Long> employeeIds = new HashSet<>();
-        project.getEmployees().forEach(employee -> employeeIds.add(employee.getId()));
-        dto.setEmployeeIds(employeeIds);
+        Set<GetEmployeeShortDto> allEmployees = new HashSet<>();
+        for(EmployeeEntity employee : project.getEmployees()){
+            GetEmployeeShortDto edto = new GetEmployeeShortDto();
+            edto.setId(employee.getId());
+            edto.setFirstname(employee.getFirstname());
+            edto.setLastname(employee.getLastname());
+            edto.setCity(employee.getCity());
+            edto.setPostcode(employee.getPostcode());
+            edto.setStreet(employee.getStreet());
+            edto.setPhone(employee.getPhone());
+            allEmployees.add(edto);
+        }
+        dto.setEmployees(allEmployees);
+        CustomerEntity customer = project.getCustomer();
+        GetCustomerShortDto cdto = new GetCustomerShortDto();
+        cdto.setId(customer.getId());
+        cdto.setFirstname(customer.getFirstname());
+        cdto.setLastname(customer.getLastname());
+        cdto.setPostcode(customer.getPostcode());
+        cdto.setCity(customer.getCity());
+        cdto.setStreet(customer.getStreet());
+        cdto.setPhone(customer.getPhone());
+
+        dto.setCustomer(cdto);
+
         return dto;
     }
 }

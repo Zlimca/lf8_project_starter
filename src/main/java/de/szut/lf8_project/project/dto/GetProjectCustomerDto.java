@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 import java.util.Set;
 
 @Data
-public class GetProjectDto {
+public class GetProjectCustomerDto {
     private Long id;
     private String description;
     private String comment;
@@ -16,5 +16,5 @@ public class GetProjectDto {
     private LocalDateTime plannedEndDate;
     private LocalDateTime actualEndDate;
     private Set<GetEmployeeShortDto> employees;
-    private GetCustomerShortDto customer;
+
 }

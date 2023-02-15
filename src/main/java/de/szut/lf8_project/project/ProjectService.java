@@ -31,6 +31,7 @@ public class ProjectService {
         return repository.findByEmployeesId(employeeId);
     }
 
+
     public ProjectEntity update(ProjectEntity project) {
         ProjectEntity updatedProject = readById(project.getId());
         updatedProject.setDescription(project.getDescription());

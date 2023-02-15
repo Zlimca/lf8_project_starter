@@ -1,12 +1,8 @@
 package de.szut.lf8_project.employee.dto;
 
-import de.szut.lf8_project.project.dto.GetProjectEmployeeDto;
 import lombok.Data;
 
-import java.util.Set;
-
-@Data
-public class GetEmployeeDto {
+@Data public class GetEmployeeShortDto {
     private Long id;
     private String firstname;
     private String lastname;
@@ -14,5 +10,4 @@ public class GetEmployeeDto {
     private String postcode;
     private String city;
     private String phone;
-    private Set<GetProjectEmployeeDto> projects;
 }

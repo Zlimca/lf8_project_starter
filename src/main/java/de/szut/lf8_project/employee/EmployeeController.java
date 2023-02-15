@@ -1,6 +1,8 @@
 package de.szut.lf8_project.employee;
 
 import de.szut.lf8_project.employee.dto.AddEmployeeDto;
+
+import de.szut.lf8_project.employee.dto.GetEmployeeShortDto;
 import de.szut.lf8_project.employee.dto.GetEmployeeDto;
 import de.szut.lf8_project.mapping.MappingService;
 import org.springframework.http.HttpStatus;
@@ -24,10 +26,10 @@ public class EmployeeController {
     }
 
     @PostMapping
-    public ResponseEntity<GetEmployeeDto> createEmployee(@Valid @RequestBody final AddEmployeeDto dto) {
+    public ResponseEntity<GetEmployeeShortDto> createEmployee(@Valid @RequestBody final AddEmployeeDto dto) {
         EmployeeEntity newEmployee = this.mappingService.mapAddEmployeeDtoToEmployee(dto);
         newEmployee = this.employeeService.add(newEmployee);
-        final GetEmployeeDto request = this.mappingService.mapEmployeeToGetEmployeeDto(newEmployee);
+        final GetEmployeeShortDto request = this.mappingService.mapEmployeeToGetEmployeeShortDto(newEmployee);
         return new ResponseEntity<>(request, HttpStatus.CREATED);
     }
 
@@ -49,11 +51,11 @@ public class EmployeeController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<GetEmployeeDto> updateEmployee(@PathVariable final Long id, @Valid @RequestBody final AddEmployeeDto dto) {
+    public ResponseEntity<GetEmployeeShortDto> updateEmployee(@PathVariable final Long id, @Valid @RequestBody final AddEmployeeDto dto) {
         EmployeeEntity updatedEmployee = this.mappingService.mapAddEmployeeDtoToEmployee(dto);
         updatedEmployee.setId(id);
         updatedEmployee = this.employeeService.update(updatedEmployee);
-        GetEmployeeDto request = this.mappingService.mapEmployeeToGetEmployeeDto(updatedEmployee);
+        GetEmployeeShortDto request = this.mappingService.mapEmployeeToGetEmployeeShortDto(updatedEmployee);
         return new ResponseEntity<>(request, HttpStatus.OK);
     }
 
