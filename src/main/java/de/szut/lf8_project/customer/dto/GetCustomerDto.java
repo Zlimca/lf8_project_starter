@@ -1,6 +1,6 @@
 package de.szut.lf8_project.customer.dto;
 
-import de.szut.lf8_project.project.ProjectEntity;
+import de.szut.lf8_project.project.dto.GetProjectCustomerDto;
 import lombok.Data;
 
 import java.util.Set;
@@ -14,5 +14,5 @@ public class GetCustomerDto {
     private String postcode;
     private String city;
     private String phone;
-    private Set<ProjectEntity> projects;
+    private Set<GetProjectCustomerDto> projects;
 }

@@ -26,7 +26,7 @@ public class CustomerController {
     public ResponseEntity<GetCustomerDto> createCustomer(@Valid @RequestBody final AddCustomerDto dto) {
         CustomerEntity newCustomer = this.mappingService.mapAddCustomerDtoToCustomer(dto);
         newCustomer = this.customerService.add(newCustomer);
-        final GetCustomerDto request = this.mappingService.mapCustomerToGetCustomerDto(newCustomer);
+        final GetCustomerDto request = this.mappingService.mapCustomerToGetCustomerShortDto(newCustomer);
         return new ResponseEntity<>(request, HttpStatus.CREATED);
     }
 
