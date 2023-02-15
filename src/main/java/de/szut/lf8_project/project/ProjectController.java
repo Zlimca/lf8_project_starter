@@ -18,9 +18,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import de.szut.lf8_project.mapping.MappingService;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.time.chrono.ChronoLocalDate;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -50,16 +56,22 @@ public class ProjectController {
             @ApiResponse(responseCode = "201", description = "created project", content = {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = AddProjectDto.class))}),
             @ApiResponse(responseCode = "400", description = "invalid JSON posted", content = @Content),
-            @ApiResponse(responseCode = "401", description = "not authorized", content = @Content)
+            @ApiResponse(responseCode = "401", description = "not authorized", content = @Content),
+            @ApiResponse(responseCode = "409", description = "Employee not available")
     })
     @PostMapping
     public ResponseEntity<GetProjectDto> createProject(@Valid @RequestBody final AddProjectDto dto) {
         System.getLogger("project_dto").log(System.Logger.Level.DEBUG, dto.toString());
         final CustomerEntity customer = this.customerService.readById(dto.getCustomerId());
         Set<EmployeeEntity> employees = new HashSet<>();
-        dto.getEmployeeIds().forEach(id -> employees.add(
-                this.employeeService.readById(id)
-        ));
+        for (Long employeeId : dto.getEmployeeIds()) {
+            if (isEmployeeAvailable(employeeId, dto.getStartDate(), dto.getPlannedEndDate())) {
+                employees.add(this.employeeService.readById(employeeId));
+                dto.getEmployeeIds().forEach(id -> employees.add(this.employeeService.readById(id)));
+            } else {
+                throw new ResponseStatusException(HttpStatus.CONFLICT, "Employee not available");
+            }
+        }
         ProjectEntity newProject = this.mappingService.mapAddProjectDtoToProject(dto, customer, employees);
         newProject = this.projectService.create(newProject);
         final GetProjectDto request = this.mappingService.mapProjectToGetProjectDto(newProject);
@@ -77,9 +89,14 @@ public class ProjectController {
     public ResponseEntity<GetProjectDto> updateProject(@PathVariable final Long id, @Valid @RequestBody final AddProjectDto dto) {
         final CustomerEntity customer = this.customerService.readById(dto.getCustomerId());
         Set<EmployeeEntity> employees = new HashSet<>();
-        dto.getEmployeeIds().forEach(eid -> employees.add(
-                this.employeeService.readById(eid)
-        ));
+       for (Long employeeId : dto.getEmployeeIds()) {
+           if (isEmployeeAvailable(employeeId, dto.getStartDate(), dto.getPlannedEndDate())) {
+               employees.add(this.employeeService.readById(employeeId));
+               dto.getEmployeeIds().forEach(eid -> employees.add(this.employeeService.readById(eid)));
+           } else {
+               throw new ResponseStatusException(HttpStatus.CONFLICT, "Employee not available");
+           }
+       }
         ProjectEntity updatedProject = this.mappingService.mapAddProjectDtoToProject(dto, customer, employees);
         updatedProject.setId(id);
         updatedProject = this.projectService.update(updatedProject);
@@ -113,6 +130,18 @@ public class ProjectController {
 
         projectRepository.save(project);
         employeeRepository.save(employee);
+    }
+
+    private boolean isEmployeeAvailable(Long employeeId, LocalDateTime startDate, LocalDateTime endDate) {
+        List<ProjectEntity> projects = this.projectService.findByEmployeeId(employeeId);
+        for (ProjectEntity project : projects) {
+            if (project.getStartDate().isBefore(endDate) && startDate.isBefore(project.getPlannedEndDate()) ||
+                    startDate.isEqual(project.getPlannedEndDate()) || endDate.isEqual(project.getStartDate())) {
+                return false;
+            }
+
+        }
+        return true;
     }
 }
 
