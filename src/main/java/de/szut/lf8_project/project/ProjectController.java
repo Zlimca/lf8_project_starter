@@ -41,6 +41,7 @@ public class ProjectController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "created project", content = {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = AddProjectDto.class))}),
+            @ApiResponse(responseCode = "204", description = "deleted project", content = @Content),
             @ApiResponse(responseCode = "400", description = "invalid JSON posted", content = @Content),
             @ApiResponse(responseCode = "401", description = "not authorized", content = @Content)
     })
@@ -77,6 +78,12 @@ public class ProjectController {
         updatedProject = this.projectService.update(updatedProject);
         GetProjectDto request = this.mappingService.mapProjectToGetProjectDto(updatedProject);
         return new ResponseEntity<>(request, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteProjectById(@PathVariable Long id) {
+        projectService.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 }
 
