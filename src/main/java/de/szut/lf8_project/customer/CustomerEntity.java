@@ -26,7 +26,7 @@ public class CustomerEntity {
     private String city;
     private String phone;
 
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
     private Set<ProjectEntity> projects;
 
     @Override
