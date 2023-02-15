@@ -37,18 +37,12 @@ public class ProjectController {
     private final CustomerService customerService;
     private final EmployeeService employeeService;
     private final MappingService mappingService;
-    private final ProjectRepository projectRepository;
-    private final EmployeeRepository employeeRepository;
 
-    public ProjectController(ProjectService projectService, CustomerService customerService, EmployeeService employeeService, MappingService mappingService,
-                             ProjectRepository projectRepository,
-                             EmployeeRepository employeeRepository) {
+    public ProjectController(ProjectService projectService, CustomerService customerService, EmployeeService employeeService, MappingService mappingService) {
         this.projectService = projectService;
         this.customerService = customerService;
         this.employeeService = employeeService;
         this.mappingService = mappingService;
-        this.projectRepository = projectRepository;
-        this.employeeRepository = employeeRepository;
     }
 
     @Operation(summary = "")
@@ -127,9 +121,6 @@ public class ProjectController {
         if (!projectService.removeEmployee(project, employeeId)) {
             throw new ResourceNotFoundException("EmployeeEntity with id = " + employeeId + " not removed");
         }
-
-        projectRepository.save(project);
-        employeeRepository.save(employee);
     }
 
     private boolean isEmployeeAvailable(Long employeeId, LocalDateTime startDate, LocalDateTime endDate) {

@@ -43,6 +43,10 @@ public class ProjectService {
     }
 
     public boolean removeEmployee(ProjectEntity project, Long employeeId) {
-        return project.removeEmployee(employeeId);
+        boolean removed = project.removeEmployee(employeeId);
+        if (removed) {
+            repository.save(project);
+        }
+        return removed;
     }
 }
