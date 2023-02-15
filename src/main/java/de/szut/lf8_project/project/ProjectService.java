@@ -25,11 +25,7 @@ public class ProjectService {
         Optional<ProjectEntity> oProject = repository.findById(id);
         return oProject.orElse(null);
     }
-        if (oProject.isEmpty()){
-            throw new ResourceNotFoundException("Project not found no id: " + id);
-        }
-        return oProject.get();
-    }
+
 
     public ProjectEntity update(ProjectEntity project) {
         ProjectEntity updatedProject = readById(project.getId());

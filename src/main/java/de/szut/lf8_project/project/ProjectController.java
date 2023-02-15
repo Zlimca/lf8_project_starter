@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -77,6 +79,16 @@ public class ProjectController {
         updatedProject = this.projectService.update(updatedProject);
         GetProjectDto request = this.mappingService.mapProjectToGetProjectDto(updatedProject);
         return new ResponseEntity<>(request, HttpStatus.OK);
+    }
+    @GetMapping()
+    public ResponseEntity<List<GetProjectDto>> getAllProjects(){
+        List<ProjectEntity> projects = this.projectService.readAll();
+        List<GetProjectDto> list = new LinkedList<>();
+        for(ProjectEntity project: projects) {
+            list.add(this.mappingService.mapProjectToGetProjectDto(project));
+        }
+        return new ResponseEntity<>(list, HttpStatus.OK);
+
     }
 }
 
