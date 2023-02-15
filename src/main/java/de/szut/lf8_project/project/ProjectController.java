@@ -134,5 +134,11 @@ public class ProjectController {
         }
         return true;
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteProjectById(@PathVariable Long id) {
+        projectService.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
 }
 
