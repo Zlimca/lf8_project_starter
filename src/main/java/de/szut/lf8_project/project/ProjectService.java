@@ -17,8 +17,7 @@ public class ProjectService {
     public ProjectEntity create(ProjectEntity newProject){return repository.save(newProject);}
 
     public List<ProjectEntity> readAll(){
-       List<ProjectEntity> listProject = repository.findAll();
-       return listProject;
+       return repository.findAll();
     }
 
     public ProjectEntity readById(long id){
@@ -41,5 +40,13 @@ public class ProjectService {
         updatedProject.setEmployees(project.getEmployees());
         updatedProject = this.repository.save(updatedProject);
         return updatedProject;
+    }
+
+    public boolean removeEmployee(ProjectEntity project, Long employeeId) {
+        boolean removed = project.removeEmployee(employeeId);
+        if (removed) {
+            repository.save(project);
+        }
+        return removed;
     }
 }

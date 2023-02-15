@@ -47,12 +47,12 @@ public class ProjectEntity {
         employee.getProjects().add(this);
     }
 
-    public void removeEmployee(long employeeId) {
+    public boolean removeEmployee(long employeeId) {
         EmployeeEntity employee = this.employees.stream().filter(e -> e.getId() == employeeId).findFirst().orElse(null);
         if (employee != null) {
-            this.employees.remove(employee);
-            employee.getProjects().remove(this);
+            return this.employees.remove(employee) && employee.getProjects().remove(this);
         }
+        return false;
     }
 
     @Override

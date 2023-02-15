@@ -4,7 +4,9 @@ package de.szut.lf8_project.project;
 import de.szut.lf8_project.customer.CustomerEntity;
 import de.szut.lf8_project.customer.CustomerService;
 import de.szut.lf8_project.employee.EmployeeEntity;
+import de.szut.lf8_project.employee.EmployeeRepository;
 import de.szut.lf8_project.employee.EmployeeService;
+import de.szut.lf8_project.exceptionHandling.ResourceNotFoundException;
 import de.szut.lf8_project.project.dto.AddProjectDto;
 import de.szut.lf8_project.project.dto.GetProjectDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -95,6 +97,32 @@ public class ProjectController {
         GetProjectDto request = this.mappingService.mapProjectToGetProjectDto(updatedProject);
         return new ResponseEntity<>(request, HttpStatus.OK);
     }
+
+    @Operation(summary = "removes a employee by id from the project")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "delete successful"),
+            @ApiResponse(responseCode = "401", description = "not authorized",
+                    content = @Content),
+            @ApiResponse(responseCode = "404", description = "resource not found",
+                    content = @Content)})
+    @DeleteMapping("/{projectId}/{employeeId}")
+    @ResponseStatus(code = HttpStatus.NO_CONTENT)
+    public void deleteEmployeeFromProject(@PathVariable final Long projectId, @PathVariable final Long employeeId) {
+        final ProjectEntity project = this.projectService.readById(projectId);
+        final EmployeeEntity employee = this.employeeService.readById(employeeId);
+        if (project == null) {
+            throw new ResourceNotFoundException("ProjectEntity not found with id = " + projectId);
+        }
+
+        if (employee == null) {
+            throw new ResourceNotFoundException("EmployeeEntity not found with id = " + employeeId);
+        }
+
+        if (!projectService.removeEmployee(project, employeeId)) {
+            throw new ResourceNotFoundException("EmployeeEntity with id = " + employeeId + " not removed");
+        }
+    }
+
     private boolean isEmployeeAvailable(Long employeeId, LocalDateTime startDate, LocalDateTime endDate) {
         List<ProjectEntity> projects = this.projectService.findByEmployeeId(employeeId);
         for (ProjectEntity project : projects) {
