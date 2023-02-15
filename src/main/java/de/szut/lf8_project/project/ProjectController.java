@@ -3,6 +3,9 @@ package de.szut.lf8_project.project;
 
 import de.szut.lf8_project.customer.CustomerEntity;
 import de.szut.lf8_project.customer.CustomerService;
+import de.szut.lf8_project.customer.dto.AddCustomerDto;
+import de.szut.lf8_project.customer.dto.GetCustomerDto;
+import de.szut.lf8_project.customer.dto.GetCustomerShortDto;
 import de.szut.lf8_project.employee.EmployeeEntity;
 import de.szut.lf8_project.employee.EmployeeRepository;
 import de.szut.lf8_project.employee.EmployeeService;
@@ -47,7 +50,7 @@ public class ProjectController {
         this.mappingService = mappingService;
     }
 
-    @Operation(summary = "")
+    @Operation(summary = "creates a new project with its id")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "created project", content = {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = AddProjectDto.class))}),
@@ -73,14 +76,30 @@ public class ProjectController {
         final GetProjectDto request = this.mappingService.mapProjectToGetProjectDto(newProject);
         return new ResponseEntity<>(request, HttpStatus.CREATED);
     }
-    
+
+    @Operation(summary = "delivers a project by its Id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "project by id",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = GetProjectDto.class))}),
+            @ApiResponse(responseCode = "401", description = "not authorized",
+                    content = @Content)})
+
     @GetMapping("/{id}")
     public ResponseEntity<GetProjectDto> getProjectById(@PathVariable final Long id) {
         final var entity = this.projectService.readById(id);
         final GetProjectDto dto = this.mappingService.mapProjectToGetProjectDto(entity);
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
-   
+
+    @Operation(summary = "updates a project by its Id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "project by id",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = AddProjectDto.class))}),
+            @ApiResponse(responseCode = "401", description = "not authorized",
+                    content = @Content),
+            @ApiResponse(responseCode = "409", description = "Employee not available")})
    @PutMapping("/{id}")
     public ResponseEntity<GetProjectDto> updateProject(@PathVariable final Long id, @Valid @RequestBody final AddProjectDto dto) {
         final CustomerEntity customer = this.customerService.readById(dto.getCustomerId());
@@ -99,6 +118,14 @@ public class ProjectController {
         GetProjectDto request = this.mappingService.mapProjectToGetProjectDto(updatedProject);
         return new ResponseEntity<>(request, HttpStatus.OK);
     }
+
+    @Operation(summary = "delivers a list of projects")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "list of projects",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = GetProjectDto.class))}),
+            @ApiResponse(responseCode = "401", description = "not authorized",
+                    content = @Content)})
     @GetMapping()
     public ResponseEntity<List<GetProjectDto>> getAllProjects(){
         List<ProjectEntity> projects = this.projectService.readAll();
@@ -146,7 +173,13 @@ public class ProjectController {
         }
         return true;
     }
-
+    @Operation(summary = "deletes a project by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "delete successful"),
+            @ApiResponse(responseCode = "401", description = "not authorized",
+                    content = @Content),
+            @ApiResponse(responseCode = "404", description = "resource not found",
+                    content = @Content)})
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProjectById(@PathVariable Long id) {
         projectService.deleteById(id);
